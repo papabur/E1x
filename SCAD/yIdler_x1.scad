@@ -3,31 +3,31 @@
 include <./inc/configuration.scad>
 use <./inc/polyarc.scad>
 
-yIdler();
+rotate([0,0,-90])yIdler(length=60,width=10);
 rotate([90, 0, 90])
     yIdler_Retainer();
 
-module yIdler(){
+module yIdler(length=10, width=0){
     
     difference(){
 
 	union(){
 	    
-	    hull(){
-		cube([frameY+thickness*4, 1, rotaryBearing[1]]);
-		translate([0, 10+frameX+15+rotaryBearing[1]/2, rotaryBearing[1]/2])
+    hull(){
+      cube([frameY+thickness*4, 1, rotaryBearing[1]]);
+      translate([0, length+frameX+15+rotaryBearing[1]/2, rotaryBearing[1]/2])
 		    rotate([0,90,0])
-		    polycyl(d=rotaryBearing[1], h=frameY+thickness*4);
-	    }
+        polycyl(d=rotaryBearing[1], h=frameY+thickness*4);
+    }
 		
 	}// end union
 	
 	// cutout to make arms
-	translate([thickness*2, 10, -1])
-	    cube([frameY, frameX+15, rotaryBearing[1]+2]);
+	translate([thickness*2-(width/2), 10, -1])
+	    cube([frameY+width, frameX+length+5, rotaryBearing[1]+2]);
 	
 	// cutout to narrow for bearings
-	translate([thickness*2+frameY/2-(rotaryBearing[2]*2+1)/2, 10+frameX, -1])
+	translate([thickness*2+frameY/2-(rotaryBearing[2]*2+1)/2, length+frameX, -1])
 	    cube([rotaryBearing[2]*2+1, frameX+15, rotaryBearing[1]+2]);
 	
 	// tensioner bolt and nut trap
@@ -39,7 +39,7 @@ module yIdler(){
 	    polynut(d=M5nut, h=frameX);
 	
 	// bearing bolt hole
-	translate([-1, 10+frameX+15+rotaryBearing[1]/3, rotaryBearing[1]/2])
+	translate([-1, length+frameX+15+rotaryBearing[1]/3, rotaryBearing[1]/2])
 	    rotate([0, 90, 0])
 	    polycyl(d=rotaryBearing[0], h=frameY+thickness*4+2);
 
