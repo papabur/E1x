@@ -3,10 +3,13 @@
 include <./inc/configuration.scad>
 use <./inc/polyarc.scad>
 
-rotate([0,0,-90])yIdler(length=60,width=10);
+rotate([0,0,-90])yIdler(length=40,width=3);
+
 rotate([90, 0, 90])
     yIdler_Retainer();
 
+translate([40,40,0])rotate([90, 0, 90])
+    yIdler_Retainer();
 module yIdler(length=10, width=0){
     
     difference(){
