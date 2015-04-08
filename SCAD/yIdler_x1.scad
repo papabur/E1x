@@ -3,12 +3,12 @@
 include <./inc/configuration.scad>
 use <./inc/polyarc.scad>
 
-rotate([0,0,-90])yIdler(length=40,width=3);
+*rotate([0,0,-90])yIdler(length=40,width=3);
 
 rotate([90, 0, 90])
-    yIdler_Retainer();
+    yIdler_Retainer(height=2);
 
-translate([40,40,0])rotate([90, 0, 90])
+*translate([40,40,0])rotate([90, 0, 90])
     yIdler_Retainer();
 module yIdler(length=10, width=0){
     
@@ -50,26 +50,26 @@ module yIdler(length=10, width=0){
 
 }
 
-module yIdler_Retainer(){
+module yIdler_Retainer(height=0){
     
     difference(){
 
 	union(){
 	    
 	    translate([frameY+thickness*4+20, 0, 0])
-		cube([rotaryBearing[1]+thickness*2+M5nut*2, frameX, thickness*3]);
+		cube([rotaryBearing[1]+thickness*2+M5nut*2, frameX, height+thickness*3]);
 		
 	}// end union
 	
 	// cutout to capture tensioner
 	translate([frameY+thickness*4+20+M5nut+thickness, -1, -1])
-	    cube([rotaryBearing[1], frameX+2, thickness*2+1]);
+	    cube([rotaryBearing[1], frameX+2, height+thickness*2+1]);
 	
 	// bolt flats
 	translate([frameY+thickness*4+20-1, -1, thickness])
-	    cube([M5nut+1, frameX+2, thickness*2+1]);
+	    cube([M5nut+1, frameX+2, thickness*2+1+height]);
 	translate([frameY+thickness*4+20+thickness*2+M5nut+rotaryBearing[1], -1, thickness])
-	    cube([M5nut+1, frameX+2, thickness*2+1]);
+	    cube([M5nut+1, frameX+2, height+thickness*2+1]);
 	
 	// bolt holes
 	translate([frameY+thickness*4+20+M5nut/2, frameX/2, -1])
