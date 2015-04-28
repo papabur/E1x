@@ -1,6 +1,6 @@
 // 2020 holder for Y
 
-rotate([0,180,0])y_rod_holder(rod=8);
+rotate([0,180,0])y_rod_holder(rod=10);
 
 module y_rod_holder(rod=8) {
   difference() {
