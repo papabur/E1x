@@ -24,14 +24,20 @@ echo("mm long.");
 echo("Your long bracing extrusion needs to be " );
 echo(hyp2);
 echo("mm long.");
-
-*lower_bracket(angles1);
-*translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
-*translate([0,70,0]) {
+translate([0,0,0]) {
+  lower_bracket(angles1);
+  translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
+}
+translate([0,70,0]) {
   lower_bracket(angles2);
   translate([-60,0,0])mirror([0,1,0])lower_bracket(angles2);
 }
-upper_bracket(angles1, angles2, fudge_y);
+translate([0,-90,0]) 
+{
+  upper_bracket(angles1, angles2, fudge_y);
+  translate([-90,30,0])mirror([0,1,0])
+  upper_bracket(angles1, angles2, fudge_y);
+}
 
 module upper_bracket(angle1, angle2, fudge, support = true)
 {
@@ -39,8 +45,11 @@ module upper_bracket(angle1, angle2, fudge, support = true)
   {
     union() 
     {
-      translate([0,(55-25)/2,0])cube([25,55,25], center=true);
-      translate([0,0,0])cube([45,25,25], center=true);
+
+      translate([0,0,-9.3])rotate([0,0,90])import("src/Z_Top_Compact_-_2x.stl");
+      translate([-17.5,0,0])cube([15,25,25], center=true);
+      translate([17.5,0,0])cube([15,25,25], center=true);
+
       translate([20+fudge, 0, 0]) rotate([0,angle1[0],0]) cube([25,25,45], center=true);
       translate([-(20+fudge), 0, 0]) rotate([0,-angle2[0],0]) cube([25,25,45], center=true);
 
@@ -57,9 +66,7 @@ module upper_bracket(angle1, angle2, fudge, support = true)
       translate([-25,15,-29]) rotate([90, 0, 0])cylinder(r=5/2 + 0.1, h=30);
     translate([0, 0, 0]) rotate([0,-angle2[0],0]) 
       translate([30,15,-24]) rotate([90, 0, 0])cylinder(r=5/2 + 0.1, h=30);
-    translate([0, 15, 5]) rotate([-90,0,0]) ext2020(l=40, teeth=[0,0,1,0]);
 
-    translate([-15,30,5])rotate([0, 90, 0])cylinder(r=5/2 + 0.1, h=30);
     ext2020(l=20);
     translate([0,0,-8])cube([5,5,30], center=true);
 
