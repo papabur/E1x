@@ -1,0 +1,51 @@
+use<inc/functions.scad>;
+
+//length: 179mm (??) - 7mm fudge = 172mm
+//height: 368mm
+
+//hyp: 406.21177
+//lower-angle: 63.83953
+//upper-angle: 24.986961
+
+y1_length = 179;
+y2_length = (485+40 - 179);
+z_height = 368;
+fudge_y=7;
+fudge_z=0;
+hyp1 = sqrt(pow((y1_length-fudge_y),2) + pow(z_height-fudge_z,2));
+hyp2 = sqrt(pow((y2_length-fudge_y),2) + pow(z_height-fudge_z,2));
+
+angles1 = [acos(y1_length/hyp1), 90, acos(z_height/hyp1)];
+angles2 = [acos(y2_length/hyp2), 90, acos(z_height/hyp2)];
+
+lower_bracket(angles1);
+translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
+*translate([0,70,0]) {
+  lower_bracket(angles2);
+  translate([-60,0,0])mirror([0,1,0])lower_bracket(angles2);
+}
+
+module lower_bracket(angles, support=true) 
+{
+  difference() {
+    union() {
+      rotate([0,90,0]) 
+        translate([0,-25,-10])cube([25,25,40], center=true);
+      rotate([0,angles[2],0]) 
+        difference()
+        { 
+          translate([0,0,5])cube([30,30,40], center=true);
+          ext2020(l=50, teeth=[1,0,0,0]);
+          translate([-15,0,14])rotate([0,90,0])cylinder(r=5/2 + 0.2, h=30);
+        }
+    }
+    rotate([90,0,0])ext2020(l=50, teeth=[0,0,1,1]);
+    translate([-14,-13,0])rotate([90,0,0])ext2020(l=50, teeth=[0,0,0,0]);
+    translate([0,-25,-14])cylinder(r=5/2 + 0.2, h=30);
+    translate([-100,-100,-32.5])cube([200,200,20]);
+  }
+  if (support) {
+    translate([8.5,-35,-10])cylinder(r=1.5, h=20);
+    translate([-15,-35,-10])cylinder(r=1.5, h=20);
+  }
+}
