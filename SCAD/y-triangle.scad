@@ -18,11 +18,53 @@ hyp2 = sqrt(pow((y2_length-fudge_y),2) + pow(z_height-fudge_z,2));
 angles1 = [acos(y1_length/hyp1), 90, acos(z_height/hyp1)];
 angles2 = [acos(y2_length/hyp2), 90, acos(z_height/hyp2)];
 
-lower_bracket(angles1);
-translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
+echo("Your short bracing extrusion needs to be " );
+echo(hyp1);
+echo("mm long.");
+echo("Your long bracing extrusion needs to be " );
+echo(hyp2);
+echo("mm long.");
+
+*lower_bracket(angles1);
+*translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
 *translate([0,70,0]) {
   lower_bracket(angles2);
   translate([-60,0,0])mirror([0,1,0])lower_bracket(angles2);
+}
+upper_bracket(angles1, angles2, fudge_y);
+
+module upper_bracket(angle1, angle2, fudge, support = true)
+{
+  difference() 
+  {
+    union() 
+    {
+      translate([0,(55-25)/2,0])cube([25,55,25], center=true);
+      translate([0,0,0])cube([45,25,25], center=true);
+      translate([20+fudge, 0, 0]) rotate([0,angle1[0],0]) cube([25,25,45], center=true);
+      translate([-(20+fudge), 0, 0]) rotate([0,-angle2[0],0]) cube([25,25,45], center=true);
+
+    }
+    ext2020(l=20);
+    translate([20+fudge, 0, 0]) rotate([0,angle1[0],0]) 
+    {
+      ext2020(l=40, teeth=[1,0,1,1] );
+    }
+    translate([-(20+fudge), 0, 0]) rotate([0,-angle2[0],0]) {
+      ext2020(l=40, teeth=[0,1,1,1]);
+    }
+    translate([0, 0, 0]) rotate([0,angle1[0],0]) 
+      translate([-25,15,-29]) rotate([90, 0, 0])cylinder(r=5/2 + 0.1, h=30);
+    translate([0, 0, 0]) rotate([0,-angle2[0],0]) 
+      translate([30,15,-24]) rotate([90, 0, 0])cylinder(r=5/2 + 0.1, h=30);
+    translate([0, 15, 5]) rotate([-90,0,0]) ext2020(l=40, teeth=[0,0,1,0]);
+
+    translate([-15,30,5])rotate([0, 90, 0])cylinder(r=5/2 + 0.1, h=30);
+    ext2020(l=20);
+    translate([0,0,-8])cube([5,5,30], center=true);
+
+    translate([-100,-100,-32.5])cube([200,200,20]);
+  }
 }
 
 module lower_bracket(angles, support=true) 
