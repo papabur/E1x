@@ -17,6 +17,13 @@ hyp2 = sqrt(pow((y2_length-fudge_y),2) + pow(z_height-fudge_z,2));
 
 angles1 = [acos(y1_length/hyp1), 90, acos(z_height/hyp1)];
 angles2 = [acos(y2_length/hyp2), 90, acos(z_height/hyp2)];
+module support_cyl(r, h)
+{
+  difference() {
+    cylinder(r=r, h=h);
+    cylinder(r=r-0.4, h=h);
+  }
+}
 
 echo("Your short bracing extrusion needs to be " );
 echo(hyp1);
@@ -83,18 +90,22 @@ module lower_bracket(angles, support=true)
       rotate([0,angles[2],0]) 
         difference()
         { 
-          translate([0,0,5])cube([30,30,40], center=true);
-          ext2020(l=50, teeth=[1,0,0,0]);
-          translate([-15,0,14])rotate([0,90,0])cylinder(r=5/2 + 0.2, h=30);
+          translate([0,-2.5,5])cube([30,25,40], center=true);
+          translate([-15,-5,14])rotate([0,90,0])cylinder(r=5/2 + 0.2, h=30);
         }
     }
-    rotate([90,0,0])ext2020(l=50, teeth=[0,0,1,1]);
+    rotate([0,angles[2],0]) 
+          translate([0,-5,0])ext2020(l=50, teeth=[1,0,0,0]);
+    translate([0,-13,0])rotate([90,0,0])ext2020(l=50, teeth=[0,0,1,1]);
     translate([-14,-13,0])rotate([90,0,0])ext2020(l=50, teeth=[0,0,0,0]);
     translate([0,-25,-14])cylinder(r=5/2 + 0.2, h=30);
     translate([-100,-100,-32.5])cube([200,200,20]);
   }
   if (support) {
-    translate([8.5,-35,-10])cylinder(r=1.5, h=20);
-    translate([-15,-35,-10])cylinder(r=1.5, h=20);
+    translate([8.5,-17,-10])support_cyl(r=1.75, h=20);
+    translate([-15,-35,-10])support_cyl(r=1.75, h=20);
+    translate([1.5,-36,-10])support_cyl(r=1.25, h=20);
+    translate([8.5,-35,-10])support_cyl(r=1.75, h=20);
+    translate([-1.0,-17,-10])support_cyl(r=1.25, h=20);
   }
 }
