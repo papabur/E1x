@@ -24,26 +24,51 @@ module support_cyl(r, h)
     cylinder(r=r-0.4, h=h);
   }
 }
-
 echo("Your short bracing extrusion needs to be " );
 echo(hyp1);
 echo("mm long.");
 echo("Your long bracing extrusion needs to be " );
 echo(hyp2);
 echo("mm long.");
-translate([0,0,0]) {
+echo("Lower short angle: ");
+echo(angles1[2]);
+echo("upper short angle: ");
+echo(angles1[0]);
+translate([0,0,12.5]) {
   lower_bracket(angles1);
   translate([-60,0,0])mirror([0,1,0])lower_bracket(angles1);
 }
-translate([0,70,0]) {
+*translate([0,70,0]) {
   lower_bracket(angles2);
   translate([-60,0,0])mirror([0,1,0])lower_bracket(angles2);
 }
-translate([0,-90,0]) 
+translate([0,-90,15]) 
 {
-  upper_bracket(angles1, angles2, fudge_y);
-  translate([-90,30,0])mirror([0,1,0])
-  upper_bracket(angles1, angles2, fudge_y);
+  rotate([0,-90,0])upper_bracket_single(angles1, fudge_y);
+  translate([0,33,0])mirror([0,1,0]) rotate([0,-90,0])
+  upper_bracket_single(angles1, fudge_y);
+}
+
+module upper_bracket_single(angle1, fudge, support = true)
+{
+{
+  difference() 
+  {
+    union() 
+    {
+      translate([0,0,-5])cube([30,30,60],center=true);
+    }
+    translate([0,0,10])
+    rotate([0,angles1[0],0])
+    {
+      ext2020(l=40, teeth=[0,0,1,1]);
+      translate([0,30,8])rotate([90,0,0])cylinder(r=5/2 + 0.1, h=60);
+    }
+    translate([-25,0,-20])rotate([0,90,0])ext2020(l=45,teeth=[0,0,0,0]);
+    translate([-25,-15,-20])rotate([0,90,0])ext2020(l=45,teeth=[0,0,0,0]);
+    translate([0,0,-40])rotate([0,0,90])cylinder(r=5/2 + 0.1, h=20); 
+  }
+  }
 }
 
 module upper_bracket(angle1, angle2, fudge, support = true)
